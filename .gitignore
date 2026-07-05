@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# Test / coverage output
+coverage/
+test-results/
+playwright-report/
+
+# Local dev MongoDB data (mongodb-memory-server persistent path)
+.mongo-data/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Note: data/jsondata.json IS committed so the project is runnable after clone
+# (the seed script reads from it). It's the assignment-provided dataset.
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/

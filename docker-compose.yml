@@ -1,0 +1,33 @@
+# Runs the backend API + frontend together for easy local review.
+#
+# NOTE: MongoDB is intentionally NOT containerized. It stays on MongoDB Atlas (or your own
+# host) and is provided via the MONGODB_URI environment variable — this keeps the compose
+# file simple and mirrors the submission setup (Atlas). Seed the database once before use:
+#   cd backend && MONGODB_URI="<your-atlas-uri>" npm run seed
+#
+# Usage:
+#   MONGODB_URI="<your-atlas-uri>" docker compose up --build
+#   frontend -> http://localhost:5173   backend -> http://localhost:8000/api/docs
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - '8000:8000'
+    environment:
+      - MONGODB_URI=${MONGODB_URI:?set MONGODB_URI to your MongoDB Atlas connection string}
+      - PORT=8000
+      - CORS_ORIGIN=http://localhost:5173,http://127.0.0.1:5173
+      - NODE_ENV=production
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '5173:5173'
+    environment:
+      # The browser runs on the host, so it reaches the host-mapped backend port.
+      - VITE_API_BASE_URL=http://localhost:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
